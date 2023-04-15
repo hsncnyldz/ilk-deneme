@@ -1,0 +1,55 @@
+```python
+import pygame
+import random
+
+# Oyunun başlangıç ayarları
+pygame.init()
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption('Keskin Nişancı Oyunu')
+clock = pygame.time.Clock()
+
+# Renkler
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Keskin nişancı karakteri
+sniper_size = 50
+sniper_pos = [screen_width // 2 - sniper_size // 2, screen_height - sniper_size]
+
+# Hedef
+target_size = 20
+target_pos = [random.randint(0, screen_width - target_size), random.randint(0, screen_height - target_size * 3)]
+
+def draw_sniper(pos):
+    pygame.draw.rect(screen, WHITE, (pos[0], pos[1], sniper_size, sniper_size))
+
+def draw_target(pos):
+    pygame.draw.circle(screen, RED, (pos[0] + target_size // 2, pos[1] + target_size // 2), target_size // 2)
+
+game_over = False
+
+# Oyun döngüsü
+while not game_over:
+    # Olayları yakalama
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                sniper_pos[0] -= sniper_size
+            if event.key == pygame.K_RIGHT:
+                sniper_pos[0] += sniper_size
+            if event.key == pygame.K_SPACE:
+                if sniper_pos[0] < target_pos[0] + target_size and sniper_pos[0] + sniper_size > target_pos[0] and sniper_pos[1] < target_pos[1] + target_size and sniper_pos[1] + sniper_size > target_pos[1]:
+                    target_pos = [random.randint(0, screen_width - target_size), random.randint(0, screen_height - target_size * 3)]
+
+    screen.fill((0, 0, 0))
+    draw_sniper(sniper_pos)
+    draw_target(target_pos)
+    pygame.display.flip()
+    clock.tick(30)
+
+pygame.quit()
+```
